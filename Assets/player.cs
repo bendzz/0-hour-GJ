@@ -10,12 +10,15 @@ public class player : MonoBehaviour
     public Rigidbody rb;
     public Collider col;
 
+    public Transform ghostModel;
+
     public float runAccel = 100;
 
     public int score = 0;
 
     public float health = 100;
 
+    Vector3 oldPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +28,6 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
 
         Transform pl = rb.transform;
 
@@ -46,9 +48,16 @@ public class player : MonoBehaviour
         rb.MoveRotation(Quaternion.Euler(new Vector3(0, mousePos.x, 0)));
         //rb.MoveRotation(Quaternion.Euler(new Vector3(-90, mousePos.x, 0)));
 
+        //ghostModel.rotation = Quaternion.Euler(transform.position - oldPos);
+        //ghostModel.rotation = Quaternion.LookRotation(oldPos, transform.up);
+        ghostModel.rotation = Quaternion.Euler(new Vector3(-90, Vector2.SignedAngle(new Vector2(oldPos.x, oldPos.z), new Vector2(transform.position.x, transform.position.z)), 0));
+
+
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = true;
+
+        oldPos = transform.position;
     }
 
 
