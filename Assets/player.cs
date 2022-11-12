@@ -44,6 +44,7 @@ public class player : MonoBehaviour
             //Debug.Log(mousePos.y);
 
         rb.MoveRotation(Quaternion.Euler(new Vector3(0, mousePos.x, 0)));
+        //rb.MoveRotation(Quaternion.Euler(new Vector3(-90, mousePos.x, 0)));
 
 
         //Cursor.lockState = CursorLockMode.Locked;
