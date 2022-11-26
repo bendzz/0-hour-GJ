@@ -16,7 +16,8 @@ public class player : MonoBehaviour
 
     public int score = 0;
 
-    public float health = 100;
+    public float maxHealth = 10;
+    public float health;
 
     float oldCharRot = 0;
 
@@ -25,6 +26,7 @@ public class player : MonoBehaviour
     void Start()
     {
         playerSingle = this;
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -58,6 +60,21 @@ public class player : MonoBehaviour
         if (rb.velocity.magnitude > 0.01f)
             oldCharRot = (charRot + oldCharRot) * .5f;
         ghostModel.rotation = Quaternion.Euler(new Vector3(-90, oldCharRot, 0));
+
+
+        MeshRenderer ghostRend = ghostModel.GetComponent<MeshRenderer>();
+        //Material mat = ghostModel.GetComponent<Material>();
+
+
+        //ghostRend.materials[1].SetColor("_Color", Color.red);
+        float healthPercent = (health / maxHealth);
+        ghostRend.materials[1].SetColor("_Color", new Color(1, healthPercent, healthPercent));
+
+
+
+        if (health < maxHealth)
+            health += (maxHealth / 5) * Time.deltaTime;
+
 
 
 
@@ -95,6 +112,14 @@ public class player : MonoBehaviour
 
     }
 
-    
+    public void colliding(Collider other)
+    {
+        if (other.name.Contains("pumpkin"))
+        {
+            health -= 1 * Time.deltaTime;
+
+            print("It burns! Health " + health);
+        }
+    }
 
 }

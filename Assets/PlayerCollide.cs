@@ -19,6 +19,11 @@ public class PlayerCollide : MonoBehaviour
     }
 
 
+    private void OnTriggerStay(Collider other)
+    {
+        player.playerSingle.colliding(other);
+
+    }
     private void OnTriggerEnter(Collider other)
     {
         //print(other.name);
