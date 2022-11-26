@@ -18,6 +18,8 @@ public class player : MonoBehaviour
 
     public float health = 100;
 
+    float oldCharRot = 0;
+
     Vector3 oldPos;
     // Start is called before the first frame update
     void Start()
@@ -44,13 +46,18 @@ public class player : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
             //Debug.Log(mousePos.x);
             //Debug.Log(mousePos.y);
-
+             
         rb.MoveRotation(Quaternion.Euler(new Vector3(0, mousePos.x, 0)));
         //rb.MoveRotation(Quaternion.Euler(new Vector3(-90, mousePos.x, 0)));
 
         //ghostModel.rotation = Quaternion.Euler(transform.position - oldPos);
         //ghostModel.rotation = Quaternion.LookRotation(oldPos, transform.up);
-        ghostModel.rotation = Quaternion.Euler(new Vector3(-90, Vector2.SignedAngle(new Vector2(oldPos.x, oldPos.z), new Vector2(transform.position.x, transform.position.z)), 0));
+        //ghostModel.rotation = Quaternion.Euler(new Vector3(-90, Vector2.SignedAngle(new Vector2(oldPos.x, oldPos.z), new Vector2(transform.position.x, transform.position.z)), 0));
+        //float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(oldPos.x - transform.position.x, -(oldPos.z - transform.position.z)));
+        float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(rb.velocity.x, -rb.velocity.z));
+        if (rb.velocity.magnitude > 0.01f)
+            oldCharRot = (charRot + oldCharRot) * .5f;
+        ghostModel.rotation = Quaternion.Euler(new Vector3(-90, oldCharRot, 0));
 
 
 
