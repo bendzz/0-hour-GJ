@@ -34,6 +34,7 @@ public class player : MonoBehaviour
     /// </summary>
     public int deadAni = 0;
     public GameObject pumpkinThatKilledMe;
+    public GameObject ghostPumpkin;
 
 
 
@@ -49,19 +50,14 @@ public class player : MonoBehaviour
     void Update()
     {
 
-        if (alive)
-        {
+       
             Transform pl = rb.transform;
 
-            if (Input.GetAxisRaw("Horizontal") != 0)
-            {
-                //print("hor" + Input.GetAxisRaw("Horizontal"));
-
-                //rb.AddForce(Vector3.right * runAccel);
-            }
+        if (alive)
+        {
             rb.AddForce(Input.GetAxisRaw("Horizontal") * pl.right * runAccel);
             rb.AddForce(Input.GetAxisRaw("Vertical") * pl.forward * runAccel);
-
+        }
 
             Vector3 mousePos = Input.mousePosition;
             //Debug.Log(mousePos.x);
@@ -102,8 +98,7 @@ public class player : MonoBehaviour
             //Cursor.visible = true;
 
             oldPos = transform.position;
-        } else
-        {
+        if (!alive) {
             // Dead, play animation
 
             if (deadAni == 0) {
@@ -119,19 +114,26 @@ public class player : MonoBehaviour
                 } else
                 {
                     deadSplosion.radius += 50 * Time.deltaTime;
-                    if (deadSplosion.radius > 10)
+                    //if (deadSplosion.radius > 10)
+                    //    deadAni = 1;
+
+                    ghostModel.localScale -= (500 * Time.deltaTime) * Vector3.one;
+                    if (ghostModel.localScale.x < 0)
                         deadAni = 1;
                 }
             } else if (deadAni == 1)
             {
                 // stage 2 of ani
-                if (deadSplosion != null)
-                    deadSplosion = null;
+                //if (deadSplosion != null)
+                //    deadSplosion = null;
 
                 //ghostModel = null;
                 ghostModel.gameObject.SetActive(false);
+                deadSplosion.enabled = false;
 
-                Instantiate(pumpkinThatKilledMe, transform.position, transform.rotation);
+                ghostPumpkin = Instantiate(pumpkinThatKilledMe, transform.position, transform.rotation);
+
+                ghostPumpkin.GetComponent<pumpkins>().startPos = pumpkinThatKilledMe.GetComponent<pumpkins>().startPos + new Vector3(0, 0, 3);
 
                 deadAni = 2;
             }

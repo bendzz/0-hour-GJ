@@ -10,13 +10,16 @@ public class pumpkins : MonoBehaviour
     player pl;
     float innateSpeed = 0;
 
-    Vector3 startPos;
+    public Vector3 startPos;
+
+    float aliveTime = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         innateSpeed = Random.value * 20 + 10;
-        startPos = transform.position;
+        if (startPos == Vector3.zero)
+            startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -28,8 +31,11 @@ public class pumpkins : MonoBehaviour
 
         Vector3 vel = rb.velocity;
 
+        float maxSpeed = innateSpeed * Mathf.Clamp01(aliveTime / 10);
+
         //if (vel.magnitude < 5)
-        if (vel.magnitude < innateSpeed)
+        //if (vel.magnitude < innateSpeed)
+        if (vel.magnitude < maxSpeed)
         {
             //rb.AddForce(Vector3.right * 20);
             //rb.AddForce(Vector3.Normalize(pl.rb.transform.position - transform.position) * 50);
@@ -38,5 +44,7 @@ public class pumpkins : MonoBehaviour
 
         if (transform.position.y < startPos.y - 5)
             transform.position = startPos;
+
+        aliveTime += Time.deltaTime;
     }
 }
