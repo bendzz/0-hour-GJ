@@ -22,7 +22,9 @@ public class pumpkins : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pl = player.playerSingle;
+        Vector3 targetPos = player.instance.transform.position;
+        if (!player.instance.alive)
+            targetPos = startPos;
 
         Vector3 vel = rb.velocity;
 
@@ -30,7 +32,8 @@ public class pumpkins : MonoBehaviour
         if (vel.magnitude < innateSpeed)
         {
             //rb.AddForce(Vector3.right * 20);
-            rb.AddForce(Vector3.Normalize(pl.rb.transform.position - transform.position) * 50);
+            //rb.AddForce(Vector3.Normalize(pl.rb.transform.position - transform.position) * 50);
+            rb.AddForce(Vector3.Normalize(targetPos - transform.position) * 50);
         }
 
         if (transform.position.y < startPos.y - 5)

@@ -21,13 +21,13 @@ public class PlayerCollide : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        player.playerSingle.colliding(other);
+        player.instance.colliding(other);
 
     }
     private void OnTriggerEnter(Collider other)
     {
         //print(other.name);
         //print("go " + other.gameObject.name);
-        player.playerSingle.collided(other);
+        player.instance.collided(other);
     }
 }
