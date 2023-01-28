@@ -103,8 +103,8 @@ public class player : MonoBehaviour
         //ghostRend.materials[1].SetColor("_Color", Color.red);
         float healthPercent = (health / maxHealth);
         ghostRend.materials[1].SetColor("_Color", new Color(1, healthPercent, healthPercent));
-
-
+        if (victory)
+            ghostRend.materials[1].SetColor("_Color", new Color(.3f, 1, .8f));
 
         if (health < maxHealth)
             health += (maxHealth / 5) * Time.deltaTime;
@@ -235,8 +235,11 @@ public class player : MonoBehaviour
             if (victory)
             {
                 // win animation
-                //rb.AddForce(Vector3.up * 50);
                 rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
+
+                //MeshRenderer ghostRend = ghostModel.GetComponent<MeshRenderer>();
+                ////ghostRend.materials[1].SetColor("_Color", new Color(.5f, .8f, 1));
+                //ghostRend.materials[1].SetColor("_Color", new Color(0, .8f, 1));
             }
         }
     }
