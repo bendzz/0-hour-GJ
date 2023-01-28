@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class pumpkins : MonoBehaviour
+public class Pumpkin : MonoBehaviour
 {
+    public static List<Pumpkin> pumpkins;
+
     public Rigidbody rb;
     public Collider collide;
 
@@ -17,16 +19,21 @@ public class pumpkins : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (pumpkins == null)
+            pumpkins = new List<Pumpkin>();
+
         innateSpeed = Random.value * 20 + 10;
         if (startPos == Vector3.zero)
             startPos = transform.position;
+
+        pumpkins.Add(this);
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 targetPos = player.instance.transform.position;
-        if (!player.instance.alive)
+        if (!player.instance.alive || player.instance.victory)
             targetPos = startPos;
 
         Vector3 vel = rb.velocity;
@@ -47,4 +54,12 @@ public class pumpkins : MonoBehaviour
 
         aliveTime += Time.deltaTime;
     }
+
+    // player won, play animation
+    public void victoryBurst()
+    {
+        rb.velocity = Vector3.Normalize(transform.position - player.instance.transform.position) * 5;
+        rb.velocity += Vector3.up * 12;
+    }
+    
 }

@@ -22,7 +22,12 @@ public class player : MonoBehaviour
     float oldCharRot = 0;
 
     public bool alive = true;
+    public bool victory = false;
 
+    public int candyTotal;
+    public int candyEaten;
+
+    public Vector3 startPos;
 
     // Dead animations 
     /// <summary>
@@ -44,14 +49,29 @@ public class player : MonoBehaviour
     {
         instance = this;
         health = maxHealth;
+
+        Object[] objects = GameObject.FindObjectsOfType(typeof(GameObject), true);
+        //Object[] objects = GameObject.FindObjectsOfType(typeof(Object), true);
+        //GameObject.find
+
+        // count candy
+        foreach(object obj in objects)
+        {
+            GameObject go = (GameObject)obj;
+            if (go.name.Contains("Bowl"))
+                candyTotal++;
+        }
+        print("candyTotal " + candyTotal);
+
+        startPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-       
-            Transform pl = rb.transform;
+
+        Transform pl = rb.transform;
 
         if (alive)
         {
@@ -59,45 +79,45 @@ public class player : MonoBehaviour
             rb.AddForce(Input.GetAxisRaw("Vertical") * pl.forward * runAccel);
         }
 
-            Vector3 mousePos = Input.mousePosition;
-            //Debug.Log(mousePos.x);
-            //Debug.Log(mousePos.y);
+        Vector3 mousePos = Input.mousePosition;
+        //Debug.Log(mousePos.x);
+        //Debug.Log(mousePos.y);
 
-            rb.MoveRotation(Quaternion.Euler(new Vector3(0, mousePos.x, 0)));
-            //rb.MoveRotation(Quaternion.Euler(new Vector3(-90, mousePos.x, 0)));
+        rb.MoveRotation(Quaternion.Euler(new Vector3(0, mousePos.x, 0)));
+        //rb.MoveRotation(Quaternion.Euler(new Vector3(-90, mousePos.x, 0)));
 
-            //ghostModel.rotation = Quaternion.Euler(transform.position - oldPos);
-            //ghostModel.rotation = Quaternion.LookRotation(oldPos, transform.up);
-            //ghostModel.rotation = Quaternion.Euler(new Vector3(-90, Vector2.SignedAngle(new Vector2(oldPos.x, oldPos.z), new Vector2(transform.position.x, transform.position.z)), 0));
-            //float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(oldPos.x - transform.position.x, -(oldPos.z - transform.position.z)));
-            float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(rb.velocity.x, -rb.velocity.z));
-            if (rb.velocity.magnitude > 0.01f)
-                oldCharRot = (charRot + oldCharRot) * .5f;
-            ghostModel.rotation = Quaternion.Euler(new Vector3(-90, oldCharRot, 0));
-
-
-            MeshRenderer ghostRend = ghostModel.GetComponent<MeshRenderer>();
-            //Material mat = ghostModel.GetComponent<Material>();
+        //ghostModel.rotation = Quaternion.Euler(transform.position - oldPos);
+        //ghostModel.rotation = Quaternion.LookRotation(oldPos, transform.up);
+        //ghostModel.rotation = Quaternion.Euler(new Vector3(-90, Vector2.SignedAngle(new Vector2(oldPos.x, oldPos.z), new Vector2(transform.position.x, transform.position.z)), 0));
+        //float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(oldPos.x - transform.position.x, -(oldPos.z - transform.position.z)));
+        float charRot = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(rb.velocity.x, -rb.velocity.z));
+        if (rb.velocity.magnitude > 0.01f)
+            oldCharRot = (charRot + oldCharRot) * .5f;
+        ghostModel.rotation = Quaternion.Euler(new Vector3(-90, oldCharRot, 0));
 
 
-            //ghostRend.materials[1].SetColor("_Color", Color.red);
-            float healthPercent = (health / maxHealth);
-            ghostRend.materials[1].SetColor("_Color", new Color(1, healthPercent, healthPercent));
+        MeshRenderer ghostRend = ghostModel.GetComponent<MeshRenderer>();
+        //Material mat = ghostModel.GetComponent<Material>();
+
+
+        //ghostRend.materials[1].SetColor("_Color", Color.red);
+        float healthPercent = (health / maxHealth);
+        ghostRend.materials[1].SetColor("_Color", new Color(1, healthPercent, healthPercent));
 
 
 
-            if (health < maxHealth)
-                health += (maxHealth / 5) * Time.deltaTime;
-            if (health < 0)
-                alive = false;
+        if (health < maxHealth)
+            health += (maxHealth / 5) * Time.deltaTime;
+        if (health < 0)
+            alive = false;
 
-            //if (health < 0)
-            //    Application.
+        //if (health < 0)
+        //    Application.
 
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = true;
 
-            oldPos = transform.position;
+        oldPos = transform.position;
         if (!alive) {
             // Dead, play animation
 
@@ -133,12 +153,32 @@ public class player : MonoBehaviour
 
                 ghostPumpkin = Instantiate(pumpkinThatKilledMe, transform.position, transform.rotation);
 
-                ghostPumpkin.GetComponent<pumpkins>().startPos = pumpkinThatKilledMe.GetComponent<pumpkins>().startPos + new Vector3(0, 0, 3);
+                ghostPumpkin.GetComponent<Pumpkin>().startPos = pumpkinThatKilledMe.GetComponent<Pumpkin>().startPos + new Vector3(0, 0, 3);
 
                 deadAni = 2;
             }
 
         }
+
+        if (candyEaten >= candyTotal)
+        {
+            //VICTORY
+            if (!victory)
+            {
+                victory = true;
+
+                foreach(Pumpkin p in Pumpkin.pumpkins)
+                {
+                    p.victoryBurst();
+                }
+            }
+        }
+
+
+        if (transform.position.y < -5)
+            transform.position = startPos;
+
+
 
     }
 
@@ -153,17 +193,19 @@ public class player : MonoBehaviour
 
     public void collided(Collider other)
     {
-        print(other.gameObject.name);
+        print("Hit: " + other.gameObject.name);
 
         if (other.name.Contains("Bowl"))
         {
             other.gameObject.SetActive(false);
             score++;
 
-            print("Candy obtained! Score" + score);
+            //print("Candy obtained! Score" + score);
+
+            candyEaten++;
         }
 
-        if (other.name.Contains("pumpkin"))
+        else if (other.name.Contains("pumpkin"))
         {
             health--;
 
@@ -171,6 +213,8 @@ public class player : MonoBehaviour
             pumpkinThatKilledMe = other.gameObject;
         }
 
+
+        collidingOrCollided(other);
     }
 
     public void colliding(Collider other)
@@ -179,7 +223,21 @@ public class player : MonoBehaviour
         {
             health -= 1 * Time.deltaTime;
 
-            print("It burns! Health " + health);
+            //print("It burns! Health " + health);
+        }
+        collidingOrCollided(other);
+    }
+
+    public void collidingOrCollided(Collider other)
+    {
+        if (other.name.Contains("Ground"))
+        {
+            if (victory)
+            {
+                // win animation
+                //rb.AddForce(Vector3.up * 50);
+                rb.velocity = new Vector3(rb.velocity.x, 5, rb.velocity.z);
+            }
         }
     }
 

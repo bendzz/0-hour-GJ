@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82745606}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.0489999, z: 0}
+  m_LocalPosition: {x: 0, y: -0.909, z: 0}
   m_LocalScale: {x: 0.6203601, y: 1.558965, z: 0.6203601}
   m_Children: []
   m_Father: {fileID: 1652486740}
@@ -177,8 +177,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.86
-  m_Height: 1.73
+  m_Radius: 0.8
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &364408668
@@ -833,7 +833,7 @@ GameObject:
   - component: {fileID: 1005560032}
   - component: {fileID: 1005560031}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1516,9 +1516,14 @@ MonoBehaviour:
   maxHealth: 10
   health: 100
   alive: 1
+  victory: 0
+  candyTotal: 0
+  candyEaten: 0
+  startPos: {x: 0, y: 0, z: 0}
   deadSplosion: {fileID: 0}
   deadAni: 0
   pumpkinThatKilledMe: {fileID: 0}
+  ghostPumpkin: {fileID: 0}
 --- !u!4 &1652486740
 Transform:
   m_ObjectHideFlags: 0
