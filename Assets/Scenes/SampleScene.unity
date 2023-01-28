@@ -1511,7 +1511,7 @@ MonoBehaviour:
   rb: {fileID: 1652486741}
   col: {fileID: 82745609}
   ghostModel: {fileID: 653522550}
-  runAccel: 30
+  runAccel: 2700
   score: 0
   maxHealth: 10
   health: 100

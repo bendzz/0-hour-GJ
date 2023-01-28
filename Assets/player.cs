@@ -75,8 +75,8 @@ public class player : MonoBehaviour
 
         if (alive)
         {
-            rb.AddForce(Input.GetAxisRaw("Horizontal") * pl.right * runAccel);
-            rb.AddForce(Input.GetAxisRaw("Vertical") * pl.forward * runAccel);
+            rb.AddForce(Input.GetAxisRaw("Horizontal") * pl.right * runAccel * Time.deltaTime);
+            rb.AddForce(Input.GetAxisRaw("Vertical") * pl.forward * runAccel * Time.deltaTime);
         }
 
         Vector3 mousePos = Input.mousePosition;

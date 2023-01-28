@@ -46,7 +46,8 @@ public class Pumpkin : MonoBehaviour
         {
             //rb.AddForce(Vector3.right * 20);
             //rb.AddForce(Vector3.Normalize(pl.rb.transform.position - transform.position) * 50);
-            rb.AddForce(Vector3.Normalize(targetPos - transform.position) * 50);
+            //rb.AddForce(Vector3.Normalize(targetPos - transform.position) * 50);
+            rb.AddForce(Vector3.Normalize(targetPos - transform.position) * 3000 * Time.deltaTime);
         }
 
         if (transform.position.y < startPos.y - 5)
